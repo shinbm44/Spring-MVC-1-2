@@ -1,9 +1,11 @@
 package hello.hellospring.basic.request;
 
+import hello.hellospring.basic.HelloData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -107,5 +109,36 @@ public class RequestParamController {
      파라미터의 값이 1개가 확실하다면 Map 을 사용해도 되지만, 그렇지 않다면 MultiValueMap 을 사용하자.
      */
 
+
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        log.info("helloData={}", helloData);
+
+        return "ok";
+    }
+    // 만약 age에 숫자가 아닌 문자가 들어가면 오류가 발생하는데, 이를 바인딩 오류라고 한다.
+    // 후에 오류 처리하는 검증 부분에서 다루겠다.( 어려운 부분/ 중요한 부분 )
+
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        log.info("helloData={}", helloData);
+
+        return "ok";
+    }
+    // ModelAttribute도 생략 가능
+
+    /*
+    @ModelAttribute 는 생략할 수 있다.
+    그런데 @RequestParam 도 생략할 수 있으니 혼란이 발생할 수 있다.
+    스프링은 해당 생략시 다음과 같은 규칙을 적용한다.
+    String , int , Integer 같은 단순 타입 = @RequestParam
+    나머지 = @ModelAttribute (argument resolver 로 지정해둔 타입 외)
+     */
 
 }
